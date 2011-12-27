@@ -29,27 +29,17 @@
 
 package org.ros.android.sensors_driver;
 
-import org.ros.node.DefaultNodeRunner;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import org.ros.address.InetAddressFactory;
 import org.ros.android.MasterChooser;
 import org.ros.android.sensors_driver.R;
-import org.ros.node.NodeConfiguration;
-import org.ros.node.NodeRunner;
-import org.ros.android.sensors_driver.NavSatFixPublisher;
-
-import android.location.LocationManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,16 +49,9 @@ import java.net.URISyntaxException;
  */
 public class MainActivity extends Activity {
 
-  private final NodeRunner nodeRunner;
-  private NotificationManager mNotificationManager;
-  private LocationManager mLocationManager;
-  
-  private NavSatFixPublisher fix_pub;
-
   private URI masterUri;
 
   public MainActivity() {
-    nodeRunner = DefaultNodeRunner.newDefault();
   }
 
   @Override
@@ -76,49 +59,24 @@ public class MainActivity extends Activity {
     super.onCreate(savedInstanceState);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.main);
-    
-    String ns = Context.NOTIFICATION_SERVICE;
-    mNotificationManager = (NotificationManager) getSystemService(ns);
-    int icon = R.drawable.sensor_icon;
-    CharSequence tickerText = "ROS Android Driver is running.";
-    long when = System.currentTimeMillis();
-    Notification notification = new Notification(icon, tickerText, when);
-    Context context = getApplicationContext();
-    CharSequence contentTitle = "ROS Android Driver Running";
-    CharSequence contentText = "To preserve battery life, plug in or close this application.";
-    Intent notificationIntent = new Intent(this, MainActivity.class);
-    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-    notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-    final int HELLO_ID = 1;
-    notification.flags = Notification.FLAG_ONGOING_EVENT;
-    mNotificationManager.notify(HELLO_ID, notification);
-    
-    mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-    
-    startActivityForResult(new Intent(this, MasterChooser.class), 0);
+    if(masterUri == null){
+    	startActivityForResult(new Intent(this, MasterChooser.class), 0);
+    }
   }
 
   @Override
   protected void onResume() {
     super.onResume();
     if (masterUri != null) {
-      NodeConfiguration nodeConfiguration =
-          NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-      nodeConfiguration.setMasterUri(masterUri);
-      nodeConfiguration.setNodeName("android_sensors_driver");
-
-      this.fix_pub = new NavSatFixPublisher(mLocationManager);
-      this.nodeRunner.run(this.fix_pub, nodeConfiguration);
+      Intent intent = new Intent(this, SensorService.class);
+      intent.putExtra("masterUri", masterUri.toString());
+      startService(intent);
     }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    if (masterUri != null) {
-    	this.nodeRunner.shutdown();
-    }
-    mNotificationManager.cancelAll();
   }
 
   @Override
@@ -160,10 +118,7 @@ private void openOptionsDialog(){
 
 private void exitOptionsDialog()
 {
-    if (masterUri != null) {
-    	this.nodeRunner.shutdown();
-    }
-	mNotificationManager.cancelAll();
+	stopService(new Intent(this, SensorService.class));
 	finish();
 }
 

@@ -55,6 +55,7 @@ public class NavSatFixPublisher implements NodeMain {
   private class NavSatThread extends Thread {
 	  LocationManager locationManager;
 	  NavSatListener navSatListener;
+	  private Looper threadLooper;
 	  
 	  private NavSatThread(LocationManager locationManager, NavSatListener navSatListener){
 		  this.locationManager = locationManager;
@@ -63,13 +64,16 @@ public class NavSatFixPublisher implements NodeMain {
 	  
 	    public void run() {
 	    	Looper.prepare();
+	    	threadLooper = Looper.myLooper();
 	    	this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this.navSatListener);
 	    	Looper.loop();
 	    }
 	    
 	    public void shutdown(){
 	    	this.locationManager.removeUpdates(this.navSatListener);
-	    	Looper.getMainLooper().quit();
+	    	if(threadLooper != null){
+	            threadLooper.quit();
+	    	}
 	    }
 	}
   

@@ -15,5 +15,6 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="org.ros.android.MasterChooser"></activity>
+		<service android:enabled="true" android:name=".SensorService" android:icon="@drawable/sensor_icon" android:label="@string/service_name" />
 	</application>
 </manifest>

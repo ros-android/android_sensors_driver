@@ -3,6 +3,15 @@
     <string name="app_name">ROS Android Sensors Driver</string>
     <string name="app_about">About ROS Android Sensors Driver</string>
 	<string name="str_exit">Exit</string>
-	<string name="app_about_message">This App uses Rosjava to publish your Android\'s sensors as ROS\'s sensor_msgs topics.  For more information, see http://www.ros.org/ .</string>
+	<string name="app_about_message">This App uses Rosjava to publish your Android\'s sensors as ROS\'s sensor_msgs topics.  For more information, see http://www.ros.org/wiki/android_sensors_driver .</string>
 	<string name="str_ok">OK</string>
+	<string name="service_name">Nav Sat Service</string>
+	
+	<string name="local_service_started">Sensor Publishing Enabled.</string>
+	<string name="local_service_ticker">ROS Android Sensors Driver is running.</string>
+	<string name="local_service_title">ROS Android Sensors Driver Running</string>
+	<string name="local_service_label">To preserve battery life, plug in or close this application.</string>
+	<string name="local_service_stopped">Sensor Publishing Disabled.</string>
+	
+	
 </resources>
