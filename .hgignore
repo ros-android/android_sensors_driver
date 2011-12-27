@@ -1,0 +1,8 @@
+bin
+build
+.classpath
+.project
+dependencies.xml
+gen
+project.properties
+ros.properties
