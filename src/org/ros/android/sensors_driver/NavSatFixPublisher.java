@@ -163,4 +163,8 @@ public void onShutdown(Node arg0) {
 		e.printStackTrace();
 	}
 }
+
+@Override
+public void onShutdownComplete(Node arg0) {
+}
 }
