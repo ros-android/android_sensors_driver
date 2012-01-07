@@ -4,8 +4,5 @@
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/android_sensors_driver</url>
-  <depend stack="android" /> <!-- android_gingerbread -->
-  <depend stack="common_msgs" /> <!-- sensor_msgs -->
-  <depend stack="ros" />
 
 </stack>
