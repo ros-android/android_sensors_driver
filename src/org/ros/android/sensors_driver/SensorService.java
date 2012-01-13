@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,8 +22,10 @@ public class SensorService extends Service {
 	private final NodeRunner nodeRunner;
     
     private NavSatFixPublisher fix_pub;
+    private ImuPublisher imu_pub;
     
     private LocationManager mLocationManager;
+    private SensorManager mSensorManager;
     
     public SensorService(){
         nodeRunner = DefaultNodeRunner.newDefault();
@@ -30,6 +33,7 @@ public class SensorService extends Service {
 
     public void onCreate() { // Intent intent, NodeConfiguration nodeConfiguration
     	mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+    	mSensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
     }
 
     @Override
@@ -45,9 +49,22 @@ public class SensorService extends Service {
 			  URI masterUri = new URI(b.getString("masterUri"));
 			  NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
 		      nodeConfiguration.setMasterUri(masterUri);
-		      nodeConfiguration.setNodeName("android_sensors_driver");
+		      nodeConfiguration.setNodeName("android_sensors_driver_nav_sat_fix");
 		      this.fix_pub = new NavSatFixPublisher(mLocationManager);
 		      this.nodeRunner.run(this.fix_pub, nodeConfiguration);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+        }
+        
+        if(this.imu_pub == null){
+	    	try {
+			  URI masterUri = new URI(b.getString("masterUri"));
+			  NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
+		      nodeConfiguration.setMasterUri(masterUri);
+		      nodeConfiguration.setNodeName("android_sensors_driver_imu");
+		      this.imu_pub = new ImuPublisher(mSensorManager);
+		      this.nodeRunner.run(this.imu_pub, nodeConfiguration);
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
@@ -64,6 +81,7 @@ public class SensorService extends Service {
     	stopForeground(true);
         
         this.nodeRunner.shutdownNodeMain(this.fix_pub);
+        this.nodeRunner.shutdownNodeMain(this.imu_pub);
     }
 
     /**
