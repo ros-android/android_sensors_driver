@@ -51,6 +51,7 @@ public class NavSatFixPublisher implements NodeMain {
   private NavSatThread navSatThread;
   private LocationManager locationManager;
   private NavSatListener navSatFixListener;
+  private Publisher<NavSatFix> publisher;
   
   private class NavSatThread extends Thread {
 	  LocationManager locationManager;
@@ -140,8 +141,7 @@ public class NavSatFixPublisher implements NodeMain {
 @Override
 public void onStart(Node node) {
   try {
-	Publisher<org.ros.message.sensor_msgs.NavSatFix> publisher =
-	  node.newPublisher("android/fix", "sensor_msgs/NavSatFix");
+	 this.publisher = node.newPublisher("android/fix", "sensor_msgs/NavSatFix");
   	this.navSatFixListener = new NavSatListener(publisher);
   	this.navSatThread = new NavSatThread(this.locationManager, this.navSatFixListener);
   	this.navSatThread.start();
