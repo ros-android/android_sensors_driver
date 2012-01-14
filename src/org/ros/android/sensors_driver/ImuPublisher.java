@@ -36,6 +36,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import org.ros.message.Time;
 import org.ros.message.sensor_msgs.Imu;
@@ -119,15 +120,21 @@ public class ImuPublisher implements NodeMain {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-	        imu.linear_acceleration.x = event.values[0];
-	        imu.linear_acceleration.y = event.values[1];
-	        imu.linear_acceleration.z = event.values[2];
+	        this.imu.linear_acceleration.x = event.values[0];
+	        this.imu.linear_acceleration.y = event.values[1];
+	        this.imu.linear_acceleration.z = event.values[2];
+	        this.imu.linear_acceleration_covariance[0] = 0.01; // TODO Make Parameter
+	        this.imu.linear_acceleration_covariance[4] = 0.01;
+	        this.imu.linear_acceleration_covariance[8] = 0.01;
 			this.accelTime = event.timestamp;
 		} else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-	        imu.angular_velocity.x = event.values[0];
-	        imu.angular_velocity.y = event.values[1];
-	        imu.angular_velocity.z = event.values[2];
-			this.gyroTime = event.timestamp;
+	        this.imu.angular_velocity.x = event.values[0];
+	        this.imu.angular_velocity.y = event.values[1];
+	        this.imu.angular_velocity.z = event.values[2];
+	        this.imu.angular_velocity_covariance[0] = 0.0025; // TODO Make Parameter
+	        this.imu.angular_velocity_covariance[4] = 0.0025;
+	        this.imu.angular_velocity_covariance[8] = 0.0025;
+	        this.gyroTime = event.timestamp;
 		} else if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
 	        float[] quaternion = new float[4];
 	        SensorManager.getQuaternionFromVector(quaternion, event.values);
@@ -135,15 +142,22 @@ public class ImuPublisher implements NodeMain {
 	        this.imu.orientation.x = quaternion[1];
 	        this.imu.orientation.y = quaternion[2];
 	       	this.imu.orientation.z = quaternion[3];
+	       	this.imu.orientation_covariance[0] = 0.001; // TODO Make Parameter
+	       	this.imu.orientation_covariance[4] = 0.001;
+	       	this.imu.orientation_covariance[8] = 0.001;
 	       	this.quatTime = event.timestamp;
 		}
 		
+		// Currently storing event times in case I filter them in the future.  Otherwise they are used to determine if all sensors have reported.
 		if((this.accelTime != 0 || !this.hasAccel) && (this.gyroTime != 0 || !this.hasGyro) && (this.quatTime != 0 || !this.hasQuat)){
-			// TODO Check timestamps
-			//long timeAverage = ((event.timestamp - this.accelTime) + (event.timestamp - this.gyroTime) + (event.timestamp - this.quatTime))/3;
-			this.imu.header.stamp = Time.fromMillis(System.currentTimeMillis()); // -timeAverage/1000000
-			this.imu.header.frame_id = "/imu"; // TODO Make frame ID configurable
+			// Convert event.timestamp (nanoseconds uptime) into system time, use that as the header stamp
+			long time_delta_millis = System.currentTimeMillis() - SystemClock.uptimeMillis();
+			this.imu.header.stamp = Time.fromMillis(time_delta_millis + event.timestamp/1000000);
+			this.imu.header.frame_id = "/imu"; // TODO Make parameter
+			
 			publisher.publish(this.imu);
+			
+			// Reset times
 			this.accelTime = 0;
 			this.gyroTime = 0;
 			this.quatTime = 0;
