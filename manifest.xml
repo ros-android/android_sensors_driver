@@ -1,22 +1,9 @@
 <package>
-  <description brief="android_sensors_driver">
-
-     android_sensors_driver
-
+  <description brief="android_sensor_driver">
+     android_sensor_driver
   </description>
-  <author>Chad Rockey</author>
-  <license>BSD</license>
-  <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/android_sensors_driver</url>
-
-  <depend package="android_gingerbread" />
-  <depend package="sensor_msgs" />
-
-  <export>
-    <rosjava-android-app target="android-9" />
-    <rosjava-src location="src" />
-    <rosjava-src location="gen" />
-    <rosjava-src location="res" />
-  </export>
-
+  <author>Damon Kohler (damonkohler@google.com)</author>
+  <license>Apache 2.0</license>
+  <review status="unreviewed" notes="" />
+  <url>http://ros.org/wiki/android_camera_tutorial</url>
 </package>

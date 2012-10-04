@@ -1,0 +1,27 @@
+# view AndroidManifest.xml #generated:32
+-keep class org.ros.android.MasterChooser { <init>(...); }
+
+# view AndroidManifest.xml #generated:34
+-keep class org.ros.android.NodeMainExecutorService { <init>(...); }
+
+# view AndroidManifest.xml #generated:21
+-keep class org.ros.android.android_sensor_driver.MainActivity { <init>(...); }
+
+# view res/layout/main.xml #generated:12
+-keep class org.ros.android.view.RosTextView { <init>(...); }
+
+# view res/layout/main.xml #generated:7
+-keep class org.ros.android.view.camera.RosCameraPreviewView { <init>(...); }
+
+# onClick res/layout/master_chooser.xml #generated:44
+-keepclassmembers class * { *** cancelButtonClicked(...); }
+
+# onClick res/layout/master_chooser.xml #generated:37
+-keepclassmembers class * { *** newMasterButtonClicked(...); }
+
+# onClick res/layout/master_chooser.xml #generated:23
+-keepclassmembers class * { *** okButtonClicked(...); }
+
+# onClick res/layout/master_chooser.xml #generated:30
+-keepclassmembers class * { *** qrCodeButtonClicked(...); }
+

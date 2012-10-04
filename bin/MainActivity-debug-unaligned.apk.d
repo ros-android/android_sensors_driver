@@ -1,0 +1,26 @@
+/n/alcona/w/furlan/workspace/android_core/android_sensor_driver/bin/MainActivity-debug-unaligned.apk : \
+/n/alcona/w/furlan/workspace/android_core/android_sensor_driver/bin/MainActivity.ap_ \
+/n/alcona/w/furlan/workspace/android_core/android_sensor_driver/bin/classes.dex \
+/n/alcona/w/furlan/workspace/android_core/android_sensor_driver/src/org/ros/android/android_sensor_driver/SensorService.java.bak \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/bin/classes.jar \
+/n/alcona/w/furlan/workspace/OpenCV-2.4.2-android-sdk/sdk/java/bin/classes.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/rosjava-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/apache_xmlrpc_server-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_sensor_driver/libs/rosjava_tutorial_pubsub-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/commons-pool-1.6.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/rosjava_messages-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.codec-1.3.0.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/apache_xmlrpc_common-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/dnsjava-2.1.1.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.lang-2.4.0.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.net-2.0.0.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/guava-12.0.jar \
+/n/alcona/w/furlan/android-sdks/tools/support/annotations.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/rosjava_bootstrap-0.0.0-SNAPSHOT.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/jsr305-1.3.9.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/ws-commons-util-1.0.1.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.httpclient-3.1.0.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.logging-1.1.1.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/com.springsource.org.apache.commons.io-1.4.0.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/netty-3.5.2.Final.jar \
+/n/alcona/w/furlan/workspace/android_core/android_gingerbread_mr1/libs/apache_xmlrpc_client-0.0.0-SNAPSHOT.jar \
