@@ -58,32 +58,37 @@ class Sample2View extends SampleCvViewBase {
     sensor_msgs.CameraInfo cameraInfo;
     private final ConnectedNode connectedNode;
 
-    public Sample2View(Context context, Publisher<sensor_msgs.CompressedImage> imagePublisher, Publisher<sensor_msgs.CameraInfo> cameraInfoPublisher, ConnectedNode connectedNode)
+    public Sample2View(Context context, ConnectedNode connectedNode)
     {
         super(context);
         
         this.connectedNode = connectedNode;
-        NameResolver resolver = connectedNode.getResolver().newChild("camera");
-        
+        Log.i(TAG,"Constructor 1");
+        NameResolver resolver = null;
+      	resolver = connectedNode.getResolver().newChild("camera");
+        Log.i(TAG,"Constructor 2");
         this.imagePublisher = connectedNode.newPublisher(resolver.resolve("image/compressed"), sensor_msgs.CompressedImage._TYPE);
         this.cameraInfoPublisher = connectedNode.newPublisher(resolver.resolve("camera_info"), sensor_msgs.CameraInfo._TYPE);
-        
+        Log.i(TAG,"Constructor 3");
         this.rawImagePublisher = connectedNode.newPublisher(resolver.resolve("image/raw"), sensor_msgs.Image._TYPE);
-        
+        Log.i(TAG,"Constructor 4");
         stream = new ChannelBufferOutputStream(MessageBuffers.dynamicBuffer());
-        
+        Log.i(TAG,"Constructor 5");
         bmp = null;
         bb = null;
         
         stats = new double[10][numSamples];
 
         oldTime = connectedNode.getCurrentTime();
+        Log.i(TAG,"Constructor 6");
         counter = 0;
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        synchronized (this) {
+    public void surfaceCreated(SurfaceHolder holder)
+    {
+        synchronized (this)
+        {
             // initialize Mats before usage
             mGray = new Mat();
             mRgba = new Mat();
@@ -123,12 +128,14 @@ class Sample2View extends SampleCvViewBase {
         }
         Time currentTime = connectedNode.getCurrentTime();
         
+        Log.i(TAG,"Mat size: " + mRgba.size() + "\tDepth: " + mRgba.channels());
+        
         measureTime[1] = connectedNode.getCurrentTime();
         
         if(bmp == null)
         	bmp = Bitmap.createBitmap(mRgba.cols(), mRgba.rows(), Bitmap.Config.ARGB_8888);
 
-        if(bb == null)
+        if(MainActivity.imageCompression == MainActivity.IMAGE_TRANSPORT_COMPRESSION_NONE && bb == null)
         {
         	bb = ByteBuffer.allocate(bmp.getRowBytes()*bmp.getHeight());
         	bb.clear();
@@ -163,7 +170,7 @@ class Sample2View extends SampleCvViewBase {
 	            if(MainActivity.imageCompression == MainActivity.IMAGE_TRANSPORT_COMPRESSION_PNG)
 	            	bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
 	            else if(MainActivity.imageCompression == MainActivity.IMAGE_TRANSPORT_COMPRESSION_JPEG)
-	            	bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+	            	bmp.compress(Bitmap.CompressFormat.JPEG, MainActivity.imageCompressionQuality, baos);
 	        	measureTime[5] = connectedNode.getCurrentTime();
 	
 	        	stream.buffer().writeBytes(baos.toByteArray());
@@ -175,7 +182,6 @@ class Sample2View extends SampleCvViewBase {
 	            stream.buffer().clear();
 	        	imagePublisher.publish(image);
 	        	measureTime[8] = connectedNode.getCurrentTime();
-            
             }
             else
             {

@@ -35,29 +35,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-//import org.opencv.android.BaseLoaderCallback;
-//import org.opencv.android.LoaderCallbackInterface;
-//import org.opencv.android.OpenCVLoader;
-
 import org.ros.address.InetAddressFactory;
-
-//import org.ros.android.MessageCallable;
 import org.ros.android.RosActivity;
-//import org.ros.android.view.RosTextView;
-import org.ros.android.view.camera.RosCameraPreviewView;
 import org.ros.master.uri.MasterUriProvider;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-//import org.ros.rosjava_tutorial_pubsub.Talker;
 
 /**
  * @author ethan.rublee@gmail.com (Ethan Rublee)
  * @author damonkohler@google.com (Damon Kohler)
+ * @author axelfurlan@gmail.com (Axel Furlan)
  */
-public class MainActivity extends RosActivity {
 
-//  private int cameraId;
-//  private RosCameraPreviewView rosCameraPreviewView;
+
+public class MainActivity extends RosActivity
+{
   
   
   private NavSatFixPublisher fix_pub;
@@ -80,130 +72,48 @@ public class MainActivity extends RosActivity {
   public static final int     IMAGE_TRANSPORT_COMPRESSION_PNG = 1;
   public static final int     IMAGE_TRANSPORT_COMPRESSION_JPEG = 2;
 
-  private MenuItem            mItemPreviewRGBA;
-  private MenuItem            mItemPreviewGray;
-  private MenuItem            mItemPreviewCanny;
-  private MenuItem            mItemCompressionNone;
-  private MenuItem            mItemCompressionPng;
-  private MenuItem            mItemCompressionJpeg;
-
   public static int           viewMode        = VIEW_MODE_RGBA;
   public static int			  imageCompression = IMAGE_TRANSPORT_COMPRESSION_JPEG;
   public static int			  imageCompressionQuality = 80;
   
-//  private Sample2View 		mView;
   private CameraPublisher cam_pub;
-  
-  
-//  private BaseLoaderCallback  mOpenCVCallBack = new BaseLoaderCallback(this) {
-//  	@SuppressWarnings("deprecation")
-//		@Override
-//  	public void onManagerConnected(int status) {
-//  		switch (status) {
-//				case LoaderCallbackInterface.SUCCESS:
-//				{
-//					Log.i(TAG, "OpenCV loaded successfully");
-//					// Create and set View
-//					mView = new Sample2View(mAppContext);
-//					setContentView(mView);
-//					// Check native OpenCV camera
-//					if( !mView.openCamera() ) {
-//						AlertDialog ad = new AlertDialog.Builder(mAppContext).create();
-//						ad.setCancelable(false); // This blocks the 'BACK' button
-//						ad.setMessage("Fatal error: can't open camera!");
-//						ad.setButton("OK", new DialogInterface.OnClickListener() {
-//						    public void onClick(DialogInterface dialog, int which) {
-//							dialog.dismiss();
-//							finish();
-//						    }
-//						});
-//						ad.show();
-//					}
-//				} break;
-//				default:
-//				{
-//					super.onManagerConnected(status);
-//				} break;
-//			}
-//  	}
-//	};
 
-  public MainActivity() {
-    super("SensorDriver", "SensorDriver");
-//	  Log.i(TAG, "Constructor");
+  public MainActivity()
+  {
+	  super("SensorDriver", "SensorDriver");
   }
   
   @Override
   protected void onPause()
   {
-//	  Log.i(TAG, "onPause");
 	  super.onPause();
 	  if(cam_pub != null)
 	  {
-//			Log.i(TAG, "onPause NOT-NULL");
 			cam_pub.releaseCamera();
 	  }
-//	  else
-//			Log.i(TAG, "onPause NULL");
-	  
-	  
-//	  cam_pub.releaseCamera();
-//	  if (null != mView)
-//		  mView.releaseCamera();
   }
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
-//	  Log.i(TAG, "onCreate");
 	  super.onCreate(savedInstanceState);
 	  requestWindowFeature(Window.FEATURE_NO_TITLE);
 	  getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	  setContentView(R.layout.main);
-	    
-//      Log.i(TAG, "Trying to load OpenCV library");
-//      if (!OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_2, this, mOpenCVCallBack))
-//      {
-//    	  Log.e(TAG, "Cannot connect to OpenCV Manager");
-//      }
-	    
-//	    rosCameraPreviewView = (RosCameraPreviewView)findViewById(R.id.ros_camera_preview_view);
-		mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-		mSensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
+	  
+	  mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+	  mSensorManager = (SensorManager)this.getSystemService(SENSOR_SERVICE);
   }
   
-	
-//  @SuppressWarnings("deprecation")
   @Override
   protected void onResume()
   {
-//      Log.i(TAG, "onResume 1");
 		super.onResume();
-//		Log.i(TAG, "onResume 2");
+
 		if(cam_pub != null)
 		{
-//			Log.i(TAG, "onResume NOT-NULL");
 			cam_pub.resume();
 		}
-//		else
-//			Log.i(TAG, "onResume NULL");
-		
-		
-//		if((null != mView) && !mView.openCamera() )
-//		{
-//			AlertDialog ad = new AlertDialog.Builder(this).create();  
-//			ad.setCancelable(false); // This blocks the 'BACK' button  
-//			ad.setMessage("Fatal error: can't open camera!");  
-//			ad.setButton("OK", new DialogInterface.OnClickListener()
-//			{  
-//			    public void onClick(DialogInterface dialog, int which)
-//			    {  
-//			        dialog.dismiss();
-//					finish();
-//			    }  
-//			});  
-//			ad.show();
-//		}
 	}
 
 //  @SuppressLint({ "ShowToast", "ShowToast" })
@@ -234,18 +144,17 @@ public class MainActivity extends RosActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
 
 	  SubMenu subPreview = menu.addSubMenu("Color settings");
-      mItemPreviewRGBA = subPreview.add(1,1,0,"RGB Color");
-      mItemPreviewGray = subPreview.add(1,2,0,"Grayscale");
-      mItemPreviewCanny = subPreview.add(1,3,0,"Canny edges");
-      mItemPreviewRGBA.setChecked(true);
+      subPreview.add(1,VIEW_MODE_RGBA,0,"RGB Color").setChecked(true);
+      subPreview.add(1,VIEW_MODE_GRAY,0,"Grayscale");
+      subPreview.add(1,VIEW_MODE_CANNY,0,"Canny edges");
       subPreview.setGroupCheckable(1, true, true);
       
       SubMenu subCompression = menu.addSubMenu("Compression");
-      mItemCompressionNone = subCompression.add(2,4,0,"None");
-      mItemCompressionPng = subCompression.add(2,5,0,"Png");
-      subCompression.setGroupCheckable(2, true, true);
+      subCompression.add(2,IMAGE_TRANSPORT_COMPRESSION_NONE,0,"None");
+      subCompression.add(2,IMAGE_TRANSPORT_COMPRESSION_PNG,0,"Png");
       
-      SubMenu subCompressionRate = subCompression.addSubMenu(2,6,0,"Jpeg");
+      SubMenu subCompressionRate = subCompression.addSubMenu(2,IMAGE_TRANSPORT_COMPRESSION_JPEG,0,"Jpeg");
+      subCompression.setGroupCheckable(2, true, true);
       subCompressionRate.setHeaderTitle("Compression quality");
       subCompressionRate.getItem().setChecked(true);
       subCompressionRate.add(3,50,0,"50");
@@ -261,52 +170,58 @@ public class MainActivity extends RosActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
-  {
-//		  Log.i(TAG, "Menu Item selected " + item.getTitle() + " - " + item.getGroupId() + " - " + item.getItemId());
-      if (item == mItemPreviewRGBA)
-          viewMode = VIEW_MODE_RGBA;
-      else if (item == mItemPreviewGray)
-          viewMode = VIEW_MODE_GRAY;
-      else if (item == mItemPreviewCanny)
-          viewMode = VIEW_MODE_CANNY;
-      else if (item == mItemCompressionNone)
-    	  imageCompression = IMAGE_TRANSPORT_COMPRESSION_NONE;
-      else if (item == mItemCompressionPng)
-    	  imageCompression = IMAGE_TRANSPORT_COMPRESSION_PNG;
+  {      
+      if(item.getGroupId() == 1)
+      {
+    	  viewMode = item.getItemId();
+    	  item.setChecked(true);
+      }
+      
+      if(item.getGroupId() == 2)
+      {
+    	  imageCompression = item.getItemId();
+    	  item.setChecked(true);
+      }
       
       if(item.getGroupId() == 3)
       {
     	  imageCompressionQuality = item.getItemId();
-    	  imageCompression = IMAGE_TRANSPORT_COMPRESSION_JPEG;
+    	  item.setChecked(true);
       }
       return true;
   }
 
   @Override
   protected void init(NodeMainExecutor nodeMainExecutor)
-  {
-//    cameraId = 0;
-//    rosCameraPreviewView.setCamera(Camera.open(cameraId));
-//    NodeConfiguration nodeConfiguration1 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-//    nodeConfiguration1.setMasterUri(getMasterUri());
-//    nodeMainExecutor.execute(rosCameraPreviewView, nodeConfiguration1);
-	  
+  {	  
 //    NodeConfiguration nodeConfiguration2 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
 //    nodeConfiguration2.setMasterUri(getMasterUri());
 //    nodeConfiguration2.setNodeName("android_sensor_driver_nav_sat_fix");
 //    this.fix_pub = new NavSatFixPublisher(mLocationManager);
 //    nodeMainExecutor.execute(this.fix_pub, nodeConfiguration2);
+	  
+	  
+	  
+	  
+	Log.i(TAG,"Init 1");
    
     NodeConfiguration nodeConfiguration3 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-//    nodeConfiguration3.setMasterUri(getMasterUri());
-    nodeConfiguration3.setMasterUri(URI.create("http://192.168.1.213:11311/"));
+    
+    Log.i(TAG,"Init 2");
+    nodeConfiguration3.setMasterUri(getMasterUri());
+    Log.i(TAG,"Init 3");
+//    nodeConfiguration3.setMasterUri(URI.create("http://192.168.1.213:11311/"));
     nodeConfiguration3.setNodeName("android_sensors_driver_imu");
+    Log.i(TAG,"Init 4");
     this.imu_pub = new ImuPublisher(mSensorManager);
+    Log.i(TAG,"Init 5");
     nodeMainExecutor.execute(this.imu_pub, nodeConfiguration3);
+    Log.i(TAG,"Init 6");
+    
     
     NodeConfiguration nodeConfiguration4 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-//    nodeConfiguration4.setMasterUri(getMasterUri());
-    nodeConfiguration4.setMasterUri(URI.create("http://192.168.1.213:11311/"));
+    nodeConfiguration4.setMasterUri(getMasterUri());
+//    nodeConfiguration4.setMasterUri(URI.create("http://192.168.1.213:11311/"));
     nodeConfiguration4.setNodeName("android_sensors_driver_camera");
     this.cam_pub = new CameraPublisher(this);
     nodeMainExecutor.execute(this.cam_pub, nodeConfiguration4);

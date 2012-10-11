@@ -43,6 +43,7 @@ import android.hardware.SensorManager;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -67,29 +68,53 @@ public class CameraPublisher implements NodeMain
 	private Activity mainActivity;
 	private static final String TAG = "CICCIO::CameraPublisher";
 	private ConnectedNode node = null;
-	private Publisher<sensor_msgs.CompressedImage> cameraPublisher;
-	private Publisher<sensor_msgs.CameraInfo> cameraInfoPublisher;
+//	private AlertDialog ad;
 	
 	
-	
-	private BaseLoaderCallback  mOpenCVCallBack= new BaseLoaderCallback(mainActivity)
-	  {
+	private BaseLoaderCallback  mOpenCVCallBack = new BaseLoaderCallback(mainActivity)
+	{
 	  	@SuppressWarnings("deprecation")
 		@Override
 	  	public void onManagerConnected(int status)
 	  	{
-//	  		Log.i(TAG, "onManagerConnected 1");
+	  		Log.i(TAG, "onManagerConnected 1");
 	  		
 	  		switch (status)
 	  		{
 					case LoaderCallbackInterface.SUCCESS:
 					{
-//						Log.i(TAG, "OpenCV loaded successfully");
 						// Create and set View
-//						Log.i(TAG, "onManagerConnected 2");
-//						mView = new Sample2View(mAppContext, cameraPublisher, cameraInfoPublisher, node);
-//						mView = new Sample2View(mainActivity, cameraPublisher, cameraInfoPublisher, node);
-						mView = new Sample2View(mainActivity, null, null, node);
+						if(node == null)
+						{
+//							Log.i(TAG, "onManagerConnected 2");
+//							Toast toast = Toast.makeText(mainActivity.getApplication().getApplicationContext(), "Fatal error: Wrong RosMaster URI", Toast.LENGTH_LONG);
+//							toast.show();
+//							Log.i(TAG, "onManagerConnected 3");
+
+							
+							Log.i(TAG, "onManagerConnected Node NULL");
+//							
+//							ad.setCancelable(false); // This blocks the 'BACK' button
+//							ad.setMessage("Fatal error: Wrong RosMaster URI");
+//							ad.setButton("OK", new DialogInterface.OnClickListener() {
+//							    public void onClick(DialogInterface dialog, int which)
+//							    {
+//							    	dialog.dismiss();
+////							    	mainActivity.finish();
+//							    }
+//							});
+//							ad.show();
+							
+							
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								Log.e(TAG,e.toString());
+							}
+							System.exit(-1);
+						}
+						mView = new Sample2View(mainActivity, node);
 //						Log.i(TAG, "onManagerConnected 3");
 						mainActivity.setContentView(mView);
 //						mAppContext.setContentView(mView);
@@ -124,216 +149,36 @@ public class CameraPublisher implements NodeMain
 		};
 	
 	
-//		= new BaseLoaderCallback(mainActivity) {
-//	  	@SuppressWarnings("deprecation")
-//			@Override
-//	  	public void onManagerConnected(int status) {
-//	  		switch (status) {
-//					case LoaderCallbackInterface.SUCCESS:
-//					{
-//						Log.i(TAG, "OpenCV loaded successfully");
-//						// Create and set View
-//						mView = new Sample2View(mAppContext, publisher, connectedNode);
-//						mAppContext.setContentView(mView);
-//						// Check native OpenCV camera
-//						if( !mView.openCamera() ) {
-//							AlertDialog ad = new AlertDialog.Builder(mAppContext).create();
-//							ad.setCancelable(false); // This blocks the 'BACK' button
-//							ad.setMessage("Fatal error: can't open camera!");
-//							ad.setButton("OK", new DialogInterface.OnClickListener() {
-//							    public void onClick(DialogInterface dialog, int which) {
-//								dialog.dismiss();
-//								mAppContext.finish();
-//							    }
-//							});
-//							ad.show();
-//						}
-//					} break;
-//					default:
-//					{
-//						super.onManagerConnected(status);
-//					} break;
-//				}
-//	  	}
-//		};
-	
-//  private ImuThread imuThread;
-//  private SensorListener sensorListener;
-//  private SensorManager sensorManager;
-//  private Publisher<Imu> publisher;
-//  private Publisher<sensor_msgs.CompressedImage> cameraPublisher;
-//  private Publisher<sensor_msgs.CameraInfo> cameraInfoPublisher;
-  
-//  private class ImuThread extends Thread
-//  {
-//	  private final SensorManager sensorManager;
-//	  private SensorListener sensorListener;
-//	  private Looper threadLooper;
-//	  
-//	  private final Sensor accelSensor;
-//	  private final Sensor gyroSensor;
-//	  private final Sensor quatSensor;
-//	  
-//	  private ImuThread(SensorManager sensorManager, SensorListener sensorListener)
-//	  {
-//		  this.sensorManager = sensorManager;
-//		  this.sensorListener = sensorListener;
-//		  this.accelSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-//		  this.gyroSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-//		  this.quatSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-//	  }
-//	  
-//	    
-//	  public void run()
-//	  {
-//			Looper.prepare();
-//			this.threadLooper = Looper.myLooper();
-//			this.sensorManager.registerListener(this.sensorListener, this.accelSensor, SensorManager.SENSOR_DELAY_FASTEST);
-//			this.sensorManager.registerListener(this.sensorListener, this.gyroSensor, SensorManager.SENSOR_DELAY_FASTEST);
-//			this.sensorManager.registerListener(this.sensorListener, this.quatSensor, SensorManager.SENSOR_DELAY_FASTEST);
-//			Looper.loop();
-//	  }
-//	    
-//	    
-//	  public void shutdown()
-//	  {
-//	    	this.sensorManager.unregisterListener(this.sensorListener);
-//	    	if(this.threadLooper != null)
-//	    	{
-//	            this.threadLooper.quit();
-//	    	}
-//	  }
-//	}
-  
-//  private class SensorListener implements SensorEventListener
-//  {
-//
-//    private Publisher<Imu> publisher;
-//    
-//    private boolean hasAccel;
-//    private boolean hasGyro;
-//    private boolean hasQuat;
-//    
-//    private long accelTime;
-//    private long gyroTime;
-//    private long quatTime;
-//    
-//    private Imu imu;
-//
-//    private SensorListener(Publisher<Imu> publisher, boolean hasAccel, boolean hasGyro, boolean hasQuat)
-//    {
-//      this.publisher = publisher;
-//      this.hasAccel = hasAccel;
-//      this.hasGyro = hasGyro;
-//      this.hasQuat = hasQuat;
-//      this.accelTime = 0;
-//      this.gyroTime = 0;
-//      this.quatTime = 0;
-//      this.imu = this.publisher.newMessage();
-////      this.imu = new Imu(); //Use Sensor Factory
-//    }
-//
-////	@Override
-//	public void onAccuracyChanged(Sensor sensor, int accuracy)
-//	{
-//	}
-//
-////	@Override
-//	public void onSensorChanged(SensorEvent event)
-//	{
-//		if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-//		{
-//			this.imu.getLinearAcceleration().setX(event.values[0]);
-//			this.imu.getLinearAcceleration().setY(event.values[1]);
-//			this.imu.getLinearAcceleration().setZ(event.values[2]);
-////	        this.imu.linear_acceleration.x = event.values[0];
-////	        this.imu.linear_acceleration.y = event.values[1];
-////	        this.imu.linear_acceleration.z = event.values[2];
-//			
-//			double[] tmpCov = {0.01,0,0, 0,0.01,0, 0,0,0.01};
-//			this.imu.setLinearAccelerationCovariance(tmpCov);
-////	        this.imu.linear_acceleration_covariance[0] = 0.01; // TODO Make Parameter
-////	        this.imu.linear_acceleration_covariance[4] = 0.01;
-////	        this.imu.linear_acceleration_covariance[8] = 0.01;
-//			this.accelTime = event.timestamp;
-//		}
-//		else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
-//		{
-//			this.imu.getAngularVelocity().setX(event.values[0]);
-//			this.imu.getAngularVelocity().setY(event.values[1]);
-//			this.imu.getAngularVelocity().setZ(event.values[2]);
-////	        this.imu.angular_velocity.x = event.values[0];
-////	        this.imu.angular_velocity.y = event.values[1];
-////	        this.imu.angular_velocity.z = event.values[2];
-//			double[] tmpCov = {0.0025,0,0, 0,0.0025,0, 0,0,0.0025};
-//			this.imu.setAngularVelocityCovariance(tmpCov);
-////	        this.imu.angular_velocity_covariance[0] = 0.0025; // TODO Make Parameter
-////	        this.imu.angular_velocity_covariance[4] = 0.0025;
-////	        this.imu.angular_velocity_covariance[8] = 0.0025;
-//	        this.gyroTime = event.timestamp;
-//		}
-//		else if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
-//		{
-//	        float[] quaternion = new float[4];
-//	        SensorManager.getQuaternionFromVector(quaternion, event.values);
-//	        this.imu.getOrientation().setW(quaternion[0]);
-//	        this.imu.getOrientation().setX(quaternion[1]);
-//	        this.imu.getOrientation().setY(quaternion[2]);
-//	        this.imu.getOrientation().setZ(quaternion[3]);
-////		    this.imu.orientation.w = quaternion[0];
-////	        this.imu.orientation.x = quaternion[1];
-////	        this.imu.orientation.y = quaternion[2];
-////	       	this.imu.orientation.z = quaternion[3];
-//			double[] tmpCov = {0.001,0,0, 0,0.001,0, 0,0,0.001};
-//			this.imu.setOrientationCovariance(tmpCov);
-////	       	this.imu.orientation_covariance[0] = 0.001; // TODO Make Parameter
-////	       	this.imu.orientation_covariance[4] = 0.001;
-////	       	this.imu.orientation_covariance[8] = 0.001;
-//	       	this.quatTime = event.timestamp;
-//		}
-//		
-//		// Currently storing event times in case I filter them in the future.  Otherwise they are used to determine if all sensors have reported.
-//		if((this.accelTime != 0 || !this.hasAccel) && (this.gyroTime != 0 || !this.hasGyro) && (this.quatTime != 0 || !this.hasQuat))
-//		{
-//			// Convert event.timestamp (nanoseconds uptime) into system time, use that as the header stamp
-//			long time_delta_millis = System.currentTimeMillis() - SystemClock.uptimeMillis();
-//			this.imu.getHeader().setStamp(Time.fromMillis(time_delta_millis + event.timestamp/1000000));
-////			this.imu.header.stamp = Time.fromMillis(time_delta_millis + event.timestamp/1000000);
-//			this.imu.getHeader().setFrameId("/imu");
-////			this.imu.header.frame_id = "/imu"; // TODO Make parameter
-//			
-//			publisher.publish(this.imu);
-//			
-//			// Reset times
-//			this.accelTime = 0;
-//			this.gyroTime = 0;
-//			this.quatTime = 0;
-//		}
-//	}
-//  }
 
   @SuppressWarnings("deprecation")
 public void resume()
   {
-//	  Log.i(TAG, "resume 1");
+		AlertDialog ad = new AlertDialog.Builder(mainActivity).create();  
+		ad.setCancelable(false); // This blocks the 'BACK' button  
+		ad.setMessage("Cicciopasticcio!");
+		ad.setButton("OK", new DialogInterface.OnClickListener()
+		{  
+		    public void onClick(DialogInterface dialog, int which)
+		    {  
+		        dialog.dismiss();
+		        mainActivity.finish();
+		    }  
+		});
+		ad.show();
 		if((null != mView) && !mView.openCamera() )
 		{
-//			Log.i(TAG, "resume 2");
-			AlertDialog ad = new AlertDialog.Builder(mainActivity).create();  
-			ad.setCancelable(false); // This blocks the 'BACK' button  
-			ad.setMessage("Fatal error: can't open camera!");  
-//			Log.i(TAG, "resume 3");
-			ad.setButton("OK", new DialogInterface.OnClickListener()
-			{  
-			    public void onClick(DialogInterface dialog, int which)
-			    {  
-			        dialog.dismiss();
-			        mainActivity.finish();
-			    }  
-			});
-//			Log.i(TAG, "resume 4");
-			ad.show();
-//			Log.i(TAG, "resume 5");
+//			AlertDialog ad = new AlertDialog.Builder(mainActivity).create();  
+//			ad.setCancelable(false); // This blocks the 'BACK' button  
+//			ad.setMessage("Fatal error: can't open camera!");
+//			ad.setButton("OK", new DialogInterface.OnClickListener()
+//			{  
+//			    public void onClick(DialogInterface dialog, int which)
+//			    {  
+//			        dialog.dismiss();
+//			        mainActivity.finish();
+//			    }  
+//			});
+//			ad.show();
 		}
 //		Log.i(TAG, "resume 6");
   }
@@ -349,10 +194,13 @@ public void resume()
 	  this.mainActivity = mainAct;
 //	  this.sensorManager = manager;
 //      Log.i(TAG, "Trying to load OpenCV library");
-      if (!OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_2, this.mainActivity, mOpenCVCallBack))
-      {
-    	  Log.e(TAG, "Cannot connect to OpenCV Manager");
-      }
+	  
+//	  ad = new AlertDialog.Builder(mainAct).create();
+	  
+//      if (!OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_2, this.mainActivity, mOpenCVCallBack))
+//      {
+//    	  Log.e(TAG, "Cannot connect to OpenCV Manager");
+//      }
 //      else
 //    	  Log.i(TAG, "OpenCV library succesfully loaded!");
   }
@@ -368,8 +216,13 @@ public void resume()
 
   public void onStart(final ConnectedNode node)
   {
-//	  Log.i(TAG, "onStart 1");
+	  Log.i(TAG, "onStart 1: " + node);
 	  this.node = node;
+	  
+      if (!OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_2, this.mainActivity, mOpenCVCallBack))
+      {
+    	  Log.e(TAG, "Cannot connect to OpenCV Manager");
+      }
 //	  this.cameraPublisher = node.newPublisher("android/camera", sensor_msgs.CompressedImage._TYPE);
 //	  this.cameraInfoPublisher = node.newPublisher("camera_info", sensor_msgs.CameraInfo._TYPE);
 //	  Log.i(TAG, "onStart 2");
