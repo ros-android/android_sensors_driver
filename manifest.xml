@@ -1,6 +1,6 @@
 <package>
-  <description brief="android_sensor_driver">
-     android_sensor_driver
+  <description brief="android_sensors_driver">
+     android_sensors_driver
   </description>
   <author>Damon Kohler (damonkohler@google.com)</author>
   <license>Apache 2.0</license>

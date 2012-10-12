@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.ros.android.android_sensor_driver;
+package org.ros.android.android_sensors_driver;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -191,7 +191,7 @@ public void onShutdownComplete(Node arg0) {
 
 public GraphName getDefaultNodeName()
 {
-	    return GraphName.of("android_sensor_driver/imuPublisher");
+	    return GraphName.of("android_sensors_driver/imuPublisher");
 }
 
 public void onError(Node node, Throwable throwable)

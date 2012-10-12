@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.ros.android.android_sensor_driver;
+package org.ros.android.android_sensors_driver;
 
 import java.net.URI;
 
@@ -196,7 +196,7 @@ public class MainActivity extends RosActivity
   {	  
 //    NodeConfiguration nodeConfiguration2 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
 //    nodeConfiguration2.setMasterUri(getMasterUri());
-//    nodeConfiguration2.setNodeName("android_sensor_driver_nav_sat_fix");
+//    nodeConfiguration2.setNodeName("android_sensors_driver_nav_sat_fix");
 //    this.fix_pub = new NavSatFixPublisher(mLocationManager);
 //    nodeMainExecutor.execute(this.fix_pub, nodeConfiguration2);
 	  

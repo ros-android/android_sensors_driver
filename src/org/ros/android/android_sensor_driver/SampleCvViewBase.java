@@ -1,4 +1,4 @@
-package org.ros.android.android_sensor_driver;
+package org.ros.android.android_sensors_driver;
 
 import java.util.List;
 

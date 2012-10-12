@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.ros.android.android_sensor_driver;
+package org.ros.android.android_sensors_driver;
 
 //import geometry_msgs.Vector3;
 
@@ -207,7 +207,7 @@ public void resume()
 
   public GraphName getDefaultNodeName()
   {
-	    return GraphName.of("android_sensor_driver/cameraPublisher");
+	    return GraphName.of("android_sensors_driver/cameraPublisher");
   }
   
   public void onError(Node node, Throwable throwable)
