@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.ros.android.sensors_driver;
+package org.ros.android.android_sensors_driver;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -36,15 +36,18 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Looper;
 
+import org.ros.namespace.GraphName;
+import org.ros.node.ConnectedNode;
 import org.ros.message.Time;
-import org.ros.message.sensor_msgs.NavSatFix;
-import org.ros.message.sensor_msgs.NavSatStatus;
+import sensor_msgs.NavSatFix;
+import sensor_msgs.NavSatStatus;
 import org.ros.node.Node;
 import org.ros.node.NodeMain;
 import org.ros.node.topic.Publisher;
 
 /**
  * @author chadrockey@gmail.com (Chad Rockey)
+ * @author axelfurlan@gmail.com (Axel Furlan)
  */
 public class NavSatFixPublisher implements NodeMain {
 
@@ -89,36 +92,36 @@ public class NavSatFixPublisher implements NodeMain {
       this.currentStatus = NavSatStatus.STATUS_FIX; // Default to fix until we are told otherwise.
     }
 
-	@Override
-	public void onLocationChanged(Location location) {
-		NavSatFix fix = new NavSatFix();
-		fix.header.stamp = Time.fromMillis(System.currentTimeMillis());
-		fix.header.frame_id = "/gps"; // TODO Make frame ID configurable
+//	@Override
+	public void onLocationChanged(Location location)
+	{
+		NavSatFix fix = this.publisher.newMessage();
+		fix.getHeader().setStamp(Time.fromMillis(System.currentTimeMillis()));
+		fix.getHeader().setFrameId("/gps");
 		
-		fix.status.status = currentStatus;
-		fix.status.service = NavSatStatus.SERVICE_GPS;
+		fix.getStatus().setStatus(currentStatus);
+		fix.getStatus().setService(NavSatStatus.SERVICE_GPS);
 		
-		fix.latitude = location.getLatitude();
-		fix.longitude = location.getLongitude();
-		fix.altitude = location.getAltitude();
-		fix.position_covariance_type = NavSatFix.COVARIANCE_TYPE_APPROXIMATED;
+		fix.setLatitude(location.getLatitude());
+		fix.setLongitude(location.getLongitude());
+		fix.setAltitude(location.getAltitude());
+		fix.setPositionCovarianceType(NavSatFix.COVARIANCE_TYPE_APPROXIMATED);
 		double deviation = location.getAccuracy();
 		double covariance = deviation*deviation;
-		fix.position_covariance[0] = covariance;
-		fix.position_covariance[4] = covariance;
-		fix.position_covariance[8] = covariance;
+		double[] tmpCov = {covariance,0,0, 0,covariance,0, 0,0,covariance};
+		fix.setPositionCovariance(tmpCov);
 		publisher.publish(fix);
 	}
 
-	@Override
+//	@Override
 	public void onProviderDisabled(String provider) {
 	}
 
-	@Override
+//	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
-	@Override
+//	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		switch (status) {
 		case LocationProvider.OUT_OF_SERVICE:
@@ -138,23 +141,30 @@ public class NavSatFixPublisher implements NodeMain {
 	  this.locationManager = manager;
   }
 
-@Override
-public void onStart(Node node) {
-  try {
+//@Override
+public void onStart(ConnectedNode node)
+{
+  try
+  {
 	this.publisher = node.newPublisher("android/fix", "sensor_msgs/NavSatFix");
   	this.navSatFixListener = new NavSatListener(publisher);
   	this.navSatThread = new NavSatThread(this.locationManager, this.navSatFixListener);
   	this.navSatThread.start();
-  } catch (Exception e) {
-    if (node != null) {
+  }
+  catch (Exception e)
+  {
+    if (node != null)
+    {
       node.getLog().fatal(e);
-    } else {
+    }
+    else
+    {
       e.printStackTrace();
     }
   }
 }
 
-@Override
+//@Override
 public void onShutdown(Node arg0) {
 	this.navSatThread.shutdown();
 	try {
@@ -164,7 +174,17 @@ public void onShutdown(Node arg0) {
 	}
 }
 
-@Override
+//@Override
 public void onShutdownComplete(Node arg0) {
 }
+
+public GraphName getDefaultNodeName()
+{
+	    return GraphName.of("android_sensors_driver/imuPublisher");
+}
+
+public void onError(Node node, Throwable throwable)
+{
+}
+
 }
