@@ -1,4 +1,6 @@
-Author axelfurlan@gmail.com (Axel Furlan)
+Authors:
+ chadrockey@gmail.com (Chad Rockey)
+ axelfurlan@gmail.com (Axel Furlan)
 
 This is an extension to the first version of the Ros Android Sensors Driver.
 It extends the driver to camera readings and updates the previous version to the post-gradle shift of the rosjava libs.
