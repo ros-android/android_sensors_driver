@@ -2,6 +2,18 @@ Author axelfurlan@gmail.com (Axel Furlan)
 
 This is an extension to the first version of the Ros Android Sensors Driver.
 It extends the driver to camera readings and updates the previous version to the post-gradle shift of the rosjava libs.
+Two compression methods are currently supported, PNG and JPEG (with selectable compression quality).
+The topic names are:
+
+ /android/imu
+ /android/fix (GPS)
+ /camera/camera_info
+ /camera/image/compressed
+
+
+
+
+Compiling:
 
 To compile it on you machine, please follow the detailed instructions at:
 
@@ -18,3 +30,9 @@ Once your environment is set, do the following steps:
 
 For the whole process of building, packing, installing into the phone and running the app in debug mode, use the buildAll.sh script.
 
+
+
+Known issues:
+
+ 1) The code for raw images is also written, although the funcion is currently disabled due to OutOfMemory exceptions and lack of time to debug them. Any help is welcome.
+ 2) A better UI would be needed, e.g. to set camera parameters (now everything is fixed at 640x480, far focus, ecc.)
