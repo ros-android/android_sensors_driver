@@ -1,0 +1,20 @@
+Author axelfurlan@gmail.com (Axel Furlan)
+
+This is an extension to the first version of the Ros Android Sensors Driver.
+It extends the driver to camera readings and updates the previous version to the post-gradle shift of the rosjava libs.
+
+To compile it on you machine, please follow the detailed instructions at:
+
+Rosjava:
+ http://www.dobots.nl/blog/-/blogs/android-and-rosjava
+
+Android OpenCV:
+ http://docs.opencv.org/doc/tutorials/introduction/android_binary_package/android_binary_package.html
+
+Once your environment is set, do the following steps:
+ 1) git clone the repo in the android_core folder (the same folder where tutorials are).
+ 2) Edit the settings.gradle file in the android_core folder, adding 'android_sensors_driver' at the end of the include list.
+ 3) cd android_sensors_driver; ../gradlew clean debug
+
+For the whole process of building, packing, installing into the phone and running the app in debug mode, use the buildAll.sh script.
+

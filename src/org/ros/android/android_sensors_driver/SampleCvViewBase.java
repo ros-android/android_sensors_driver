@@ -13,8 +13,12 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/**
+* @author axelfurlan@gmail.com (Axel Furlan)
+*/
+
 public abstract class SampleCvViewBase extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-    private static final String TAG = "CICCIO::SurfaceView";
+    private static final String TAG = "SENSORS::SurfaceView";
 
     private SurfaceHolder       mHolder;
     private VideoCapture        mCamera;
@@ -73,15 +77,10 @@ public abstract class SampleCvViewBase extends SurfaceView implements SurfaceHol
                 }
 
 
-                Log.i(TAG, "setupCamera 1");
                 mCamera.set(Highgui.CV_CAP_PROP_ANDROID_ANTIBANDING, Highgui.CV_CAP_ANDROID_ANTIBANDING_OFF);
-                Log.i(TAG, "setupCamera 2");
                 mCamera.set(Highgui.CV_CAP_PROP_ANDROID_FLASH_MODE, Highgui.CV_CAP_ANDROID_FLASH_MODE_OFF);
-                Log.i(TAG, "setupCamera 3");
                 mCamera.set(Highgui.CV_CAP_PROP_ANDROID_FOCUS_MODE, Highgui.CV_CAP_ANDROID_FOCUS_MODE_CONTINUOUS_VIDEO);
-                Log.i(TAG, "setupCamera 4");
                 mCamera.set(Highgui.CV_CAP_PROP_ANDROID_WHITE_BALANCE, Highgui.CV_CAP_ANDROID_WHITE_BALANCE_FLUORESCENT);
-                Log.i(TAG, "setupCamera 5");
 //                mCamera.set(Highgui.CV_CAP_PROP_IOS_DEVICE_EXPOSURE,
 //                Log.i(TAG, "setupCamera 6: " + mCamera.get(Highgui.CV_CAP_PROP_IOS_DEVICE_EXPOSURE));
                 
@@ -109,7 +108,6 @@ public abstract class SampleCvViewBase extends SurfaceView implements SurfaceHol
     }
 
     protected abstract Bitmap processFrame(VideoCapture capture);
-//    protected abstract void processFrame(VideoCapture capture);
 
     public void run() {
         Log.i(TAG, "Starting processing thread");
@@ -126,7 +124,6 @@ public abstract class SampleCvViewBase extends SurfaceView implements SurfaceHol
                 }
 
                 bmp = processFrame(mCamera);
-//                processFrame(mCamera);
             }
 
             if (bmp != null) {

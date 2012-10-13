@@ -4,33 +4,26 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import org.apache.http.util.ByteArrayBuffer;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.ml.CvBoost;
 import org.ros.internal.message.MessageBuffers;
 import org.ros.message.Time;
 import org.ros.namespace.NameResolver;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 
-import android.app.NativeActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+/**
+* @author axelfurlan@gmail.com (Axel Furlan)
+*/
 
 class Sample2View extends SampleCvViewBase {
     private Mat mRgba;
@@ -47,7 +40,7 @@ class Sample2View extends SampleCvViewBase {
     
     private Bitmap bmp;
     
-    private static final String TAG = "CICCIO::Sample2View";
+    private static final String TAG = "SENSORS::Sample2View";
     
     private Publisher<sensor_msgs.CompressedImage> imagePublisher;
     private Publisher<sensor_msgs.Image> rawImagePublisher;
@@ -63,17 +56,12 @@ class Sample2View extends SampleCvViewBase {
         super(context);
         
         this.connectedNode = connectedNode;
-        Log.i(TAG,"Constructor 1");
         NameResolver resolver = null;
       	resolver = connectedNode.getResolver().newChild("camera");
-        Log.i(TAG,"Constructor 2");
         this.imagePublisher = connectedNode.newPublisher(resolver.resolve("image/compressed"), sensor_msgs.CompressedImage._TYPE);
         this.cameraInfoPublisher = connectedNode.newPublisher(resolver.resolve("camera_info"), sensor_msgs.CameraInfo._TYPE);
-        Log.i(TAG,"Constructor 3");
         this.rawImagePublisher = connectedNode.newPublisher(resolver.resolve("image/raw"), sensor_msgs.Image._TYPE);
-        Log.i(TAG,"Constructor 4");
         stream = new ChannelBufferOutputStream(MessageBuffers.dynamicBuffer());
-        Log.i(TAG,"Constructor 5");
         bmp = null;
         bb = null;
         
@@ -128,8 +116,6 @@ class Sample2View extends SampleCvViewBase {
         }
         Time currentTime = connectedNode.getCurrentTime();
         
-//        Log.i(TAG,"Mat size: " + mRgba.size() + "\tDepth: " + mRgba.channels());
-        
         measureTime[1] = connectedNode.getCurrentTime();
         
         if(bmp == null)
@@ -137,8 +123,11 @@ class Sample2View extends SampleCvViewBase {
 
         if(MainActivity.imageCompression == MainActivity.IMAGE_TRANSPORT_COMPRESSION_NONE && bb == null)
         {
+        	Log.i(TAG,"Buffer 1");
         	bb = ByteBuffer.allocate(bmp.getRowBytes()*bmp.getHeight());
+        	Log.i(TAG,"Buffer 2");
         	bb.clear();
+        	Log.i(TAG,"Buffer 3");
         }
         try
         {
@@ -186,7 +175,8 @@ class Sample2View extends SampleCvViewBase {
             else
             {
 	        	// Raw image
-		        	
+		        
+            	Log.i(TAG,"Raw image 1");
 	            sensor_msgs.Image rawImage = rawImagePublisher.newMessage();
 	            rawImage.getHeader().setStamp(currentTime);
 	            rawImage.getHeader().setFrameId("camera");
@@ -196,20 +186,28 @@ class Sample2View extends SampleCvViewBase {
 	            rawImage.setStep(640);
 	            measureTime[4] = connectedNode.getCurrentTime();
 		
+	            Log.i(TAG,"Raw image 2");
+	            
 	            bmp.copyPixelsToBuffer(bb);
 	            measureTime[5] = connectedNode.getCurrentTime();
 	
+	            Log.i(TAG,"Raw image 3");
+	            
 	            stream.buffer().writeBytes(bb.array());
 	            bb.clear();
 	            measureTime[6] = connectedNode.getCurrentTime();
 	
+	            Log.i(TAG,"Raw image 4");
+	            
 	        	rawImage.setData(stream.buffer().copy());
 	        	stream.buffer().clear();
 	        	measureTime[7] = connectedNode.getCurrentTime();
 	
+	        	Log.i(TAG,"Raw image 5");
+	        	
 	            rawImagePublisher.publish(rawImage);
 	            measureTime[8] = connectedNode.getCurrentTime();
-	            
+	            Log.i(TAG,"Raw image 6");
             }
             
             newTime = connectedNode.getCurrentTime();

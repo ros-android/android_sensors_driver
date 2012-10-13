@@ -47,6 +47,7 @@ import org.ros.node.topic.Publisher;
 
 /**
  * @author chadrockey@gmail.com (Chad Rockey)
+ * @author axelfurlan@gmail.com (Axel Furlan)
  */
 public class NavSatFixPublisher implements NodeMain {
 
@@ -95,32 +96,20 @@ public class NavSatFixPublisher implements NodeMain {
 	public void onLocationChanged(Location location)
 	{
 		NavSatFix fix = this.publisher.newMessage();
-//		NavSatFix fix = new NavSatFix();
 		fix.getHeader().setStamp(Time.fromMillis(System.currentTimeMillis()));
-//		fix.header.stamp = Time.fromMillis(System.currentTimeMillis());
 		fix.getHeader().setFrameId("/gps");
-//		fix.header.frame_id = "/gps"; // TODO Make frame ID configurable
 		
 		fix.getStatus().setStatus(currentStatus);
-//		fix.status.status = currentStatus;
 		fix.getStatus().setService(NavSatStatus.SERVICE_GPS);
-//		fix.status.service = NavSatStatus.SERVICE_GPS;
 		
 		fix.setLatitude(location.getLatitude());
-//		fix.latitude = location.getLatitude();
 		fix.setLongitude(location.getLongitude());
-//		fix.longitude = location.getLongitude();
 		fix.setAltitude(location.getAltitude());
-//		fix.altitude = location.getAltitude();
 		fix.setPositionCovarianceType(NavSatFix.COVARIANCE_TYPE_APPROXIMATED);
-//		fix.position_covariance_type = NavSatFix.COVARIANCE_TYPE_APPROXIMATED;
 		double deviation = location.getAccuracy();
 		double covariance = deviation*deviation;
 		double[] tmpCov = {covariance,0,0, 0,covariance,0, 0,0,covariance};
 		fix.setPositionCovariance(tmpCov);
-//		fix.position_covariance[0] = covariance;
-//		fix.position_covariance[4] = covariance;
-//		fix.position_covariance[8] = covariance;
 		publisher.publish(fix);
 	}
 

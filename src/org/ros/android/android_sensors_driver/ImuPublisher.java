@@ -29,7 +29,6 @@
 
 package org.ros.android.android_sensors_driver;
 
-//import geometry_msgs.Vector3;
 
 import java.util.List;
 
@@ -50,6 +49,7 @@ import org.ros.node.topic.Publisher;
 
 /**
  * @author chadrockey@gmail.com (Chad Rockey)
+ * @author axelfurlan@gmail.com (Axel Furlan)
  */
 public class ImuPublisher implements NodeMain
 {
@@ -125,7 +125,6 @@ public class ImuPublisher implements NodeMain
       this.gyroTime = 0;
       this.quatTime = 0;
       this.imu = this.publisher.newMessage();
-//      this.imu = new Imu(); //Use Sensor Factory
     }
 
 //	@Override
@@ -141,15 +140,9 @@ public class ImuPublisher implements NodeMain
 			this.imu.getLinearAcceleration().setX(event.values[0]);
 			this.imu.getLinearAcceleration().setY(event.values[1]);
 			this.imu.getLinearAcceleration().setZ(event.values[2]);
-//	        this.imu.linear_acceleration.x = event.values[0];
-//	        this.imu.linear_acceleration.y = event.values[1];
-//	        this.imu.linear_acceleration.z = event.values[2];
 			
-			double[] tmpCov = {0.01,0,0, 0,0.01,0, 0,0,0.01};
+			double[] tmpCov = {0.01,0,0, 0,0.01,0, 0,0,0.01};// TODO Make Parameter
 			this.imu.setLinearAccelerationCovariance(tmpCov);
-//	        this.imu.linear_acceleration_covariance[0] = 0.01; // TODO Make Parameter
-//	        this.imu.linear_acceleration_covariance[4] = 0.01;
-//	        this.imu.linear_acceleration_covariance[8] = 0.01;
 			this.accelTime = event.timestamp;
 		}
 		else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
@@ -157,14 +150,8 @@ public class ImuPublisher implements NodeMain
 			this.imu.getAngularVelocity().setX(event.values[0]);
 			this.imu.getAngularVelocity().setY(event.values[1]);
 			this.imu.getAngularVelocity().setZ(event.values[2]);
-//	        this.imu.angular_velocity.x = event.values[0];
-//	        this.imu.angular_velocity.y = event.values[1];
-//	        this.imu.angular_velocity.z = event.values[2];
-			double[] tmpCov = {0.0025,0,0, 0,0.0025,0, 0,0,0.0025};
+			double[] tmpCov = {0.0025,0,0, 0,0.0025,0, 0,0,0.0025};// TODO Make Parameter
 			this.imu.setAngularVelocityCovariance(tmpCov);
-//	        this.imu.angular_velocity_covariance[0] = 0.0025; // TODO Make Parameter
-//	        this.imu.angular_velocity_covariance[4] = 0.0025;
-//	        this.imu.angular_velocity_covariance[8] = 0.0025;
 	        this.gyroTime = event.timestamp;
 		}
 		else if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
@@ -175,15 +162,8 @@ public class ImuPublisher implements NodeMain
 	        this.imu.getOrientation().setX(quaternion[1]);
 	        this.imu.getOrientation().setY(quaternion[2]);
 	        this.imu.getOrientation().setZ(quaternion[3]);
-//		    this.imu.orientation.w = quaternion[0];
-//	        this.imu.orientation.x = quaternion[1];
-//	        this.imu.orientation.y = quaternion[2];
-//	       	this.imu.orientation.z = quaternion[3];
-			double[] tmpCov = {0.001,0,0, 0,0.001,0, 0,0,0.001};
+			double[] tmpCov = {0.001,0,0, 0,0.001,0, 0,0,0.001};// TODO Make Parameter
 			this.imu.setOrientationCovariance(tmpCov);
-//	       	this.imu.orientation_covariance[0] = 0.001; // TODO Make Parameter
-//	       	this.imu.orientation_covariance[4] = 0.001;
-//	       	this.imu.orientation_covariance[8] = 0.001;
 	       	this.quatTime = event.timestamp;
 		}
 		
@@ -193,9 +173,7 @@ public class ImuPublisher implements NodeMain
 			// Convert event.timestamp (nanoseconds uptime) into system time, use that as the header stamp
 			long time_delta_millis = System.currentTimeMillis() - SystemClock.uptimeMillis();
 			this.imu.getHeader().setStamp(Time.fromMillis(time_delta_millis + event.timestamp/1000000));
-//			this.imu.header.stamp = Time.fromMillis(time_delta_millis + event.timestamp/1000000);
-			this.imu.getHeader().setFrameId("/imu");
-//			this.imu.header.frame_id = "/imu"; // TODO Make parameter
+			this.imu.getHeader().setFrameId("/imu");// TODO Make parameter
 			
 			publisher.publish(this.imu);
 			
