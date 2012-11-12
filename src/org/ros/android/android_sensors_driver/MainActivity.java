@@ -32,8 +32,7 @@ import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
 /**
- * @author ethan.rublee@gmail.com (Ethan Rublee)
- * @author damonkohler@google.com (Damon Kohler)
+ * @author chadrockey@gmail.com (Chad Rockey)
  * @author axelfurlan@gmail.com (Axel Furlan)
  */
 
@@ -48,47 +47,24 @@ public class MainActivity extends RosActivity
   private LocationManager mLocationManager;
   private SensorManager mSensorManager;
   
-  
-  
-
-  // OpenCV Camera
-  private static final String TAG             = "SENSORS::MainActivity";
-
-  public static final int     VIEW_MODE_RGBA  = 0;
-  public static final int     VIEW_MODE_GRAY  = 1;
-  public static final int     VIEW_MODE_CANNY = 2;
-  
-  public static final int     IMAGE_TRANSPORT_COMPRESSION_NONE = 0;
-  public static final int     IMAGE_TRANSPORT_COMPRESSION_PNG = 1;
-  public static final int     IMAGE_TRANSPORT_COMPRESSION_JPEG = 2;
-
-  public static int           viewMode        = VIEW_MODE_RGBA;
-  public static int			  imageCompression = IMAGE_TRANSPORT_COMPRESSION_JPEG;
-  public static int			  imageCompressionQuality = 80;
-  
-  private CameraPublisher cam_pub;
 
   public MainActivity()
   {
-	  super("SensorDriver", "SensorDriver");
+	  super("Ros Android Sensors Driver", "Ros Android Sensors Driver");
   }
   
   @Override
   protected void onPause()
   {
 	  super.onPause();
-	  if(cam_pub != null)
-	  {
-			cam_pub.releaseCamera();
-	  }
   }
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
 	  super.onCreate(savedInstanceState);
-	  requestWindowFeature(Window.FEATURE_NO_TITLE);
-	  getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	  //requestWindowFeature(Window.FEATURE_NO_TITLE);
+	  //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	  setContentView(R.layout.main);
 	  
 	  mLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
@@ -99,19 +75,12 @@ public class MainActivity extends RosActivity
   protected void onResume()
   {
 		super.onResume();
-
-		if(cam_pub != null)
-		{
-			cam_pub.resume();
-		}
-		else
-			Log.i(TAG,"Error while resuming app");
 	}
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
 
-	  SubMenu subPreview = menu.addSubMenu("Color settings");
+	  /*SubMenu subPreview = menu.addSubMenu("Color settings");
       subPreview.add(1,VIEW_MODE_RGBA,0,"RGB Color").setChecked(true);
       subPreview.add(1,VIEW_MODE_GRAY,0,"Grayscale");
       subPreview.add(1,VIEW_MODE_CANNY,0,"Canny edges");
@@ -131,7 +100,7 @@ public class MainActivity extends RosActivity
       subCompressionRate.add(3,80,0,"80").setChecked(true);
       subCompressionRate.add(3,90,0,"90");
       subCompressionRate.add(3,100,0,"100");
-      subCompressionRate.setGroupCheckable(3, true, true);
+      subCompressionRate.setGroupCheckable(3, true, true);*/
 
       return true;
   }
@@ -139,7 +108,7 @@ public class MainActivity extends RosActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {      
-      if(item.getGroupId() == 1)
+      /*if(item.getGroupId() == 1)
       {
     	  viewMode = item.getItemId();
     	  item.setChecked(true);
@@ -155,7 +124,7 @@ public class MainActivity extends RosActivity
       {
     	  imageCompressionQuality = item.getItemId();
     	  item.setChecked(true);
-      }
+      }*/
       return true;
   }
 
@@ -164,25 +133,15 @@ public class MainActivity extends RosActivity
   {	  
     NodeConfiguration nodeConfiguration2 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
     nodeConfiguration2.setMasterUri(getMasterUri());
-//    nodeConfiguration2.setMasterUri(URI.create("http://192.168.1.213:11311/")); //Hardcoding the Ros master IP for fast debug
     nodeConfiguration2.setNodeName("android_sensors_driver_nav_sat_fix");
     this.fix_pub = new NavSatFixPublisher(mLocationManager);
     nodeMainExecutor.execute(this.fix_pub, nodeConfiguration2);
 	  
     NodeConfiguration nodeConfiguration3 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
     nodeConfiguration3.setMasterUri(getMasterUri());
-//    nodeConfiguration3.setMasterUri(URI.create("http://192.168.1.213:11311/")); //Hardcoding the Ros master IP for fast debug
     nodeConfiguration3.setNodeName("android_sensors_driver_imu");
     this.imu_pub = new ImuPublisher(mSensorManager);
     nodeMainExecutor.execute(this.imu_pub, nodeConfiguration3);
-    
-    
-    NodeConfiguration nodeConfiguration4 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-    nodeConfiguration4.setMasterUri(getMasterUri());
-//    nodeConfiguration4.setMasterUri(URI.create("http://192.168.1.213:11311/")); //Hardcoding the Ros master IP for fast debug
-//    nodeConfiguration4.setNodeName("android_sensors_driver_camera");
-//    this.cam_pub = new CameraPublisher(this);
-//    nodeMainExecutor.execute(this.cam_pub, nodeConfiguration4);
     
   }
 }
