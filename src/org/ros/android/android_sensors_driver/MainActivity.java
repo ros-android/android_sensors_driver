@@ -180,9 +180,9 @@ public class MainActivity extends RosActivity
     NodeConfiguration nodeConfiguration4 = NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
     nodeConfiguration4.setMasterUri(getMasterUri());
 //    nodeConfiguration4.setMasterUri(URI.create("http://192.168.1.213:11311/")); //Hardcoding the Ros master IP for fast debug
-    nodeConfiguration4.setNodeName("android_sensors_driver_camera");
-    this.cam_pub = new CameraPublisher(this);
-    nodeMainExecutor.execute(this.cam_pub, nodeConfiguration4);
+//    nodeConfiguration4.setNodeName("android_sensors_driver_camera");
+//    this.cam_pub = new CameraPublisher(this);
+//    nodeMainExecutor.execute(this.cam_pub, nodeConfiguration4);
     
   }
 }
