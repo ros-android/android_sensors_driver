@@ -176,6 +176,9 @@ public class ImuPublisher implements NodeMain
 			this.imu.getHeader().setFrameId("/imu");// TODO Make parameter
 			
 			publisher.publish(this.imu);
+
+			// Create a new message
+			this.imu = this.publisher.newMessage();
 			
 			// Reset times
 			this.accelTime = 0;
