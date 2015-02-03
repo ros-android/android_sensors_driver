@@ -1,9 +1,9 @@
 <package>
-  <description brief="android_sensors_driver">
-     android_sensors_driver
-  </description>
-  <author>Chad Rockey (chadrockey@gmail.com)</author>
-  <license>Apache 2.0</license>
-  <review status="unreviewed" notes="" />
-  <url>http://ros.org/wiki/android_sensors_driver</url>
+    <description brief="android_sensors_driver">
+        android_sensors_driver
+    </description>
+    <author>Chad Rockey (chadrockey@gmail.com)</author>
+    <license>Apache 2.0</license>
+    <review notes="" status="unreviewed"/>
+    <url>http://ros.org/wiki/android_sensors_driver</url>
 </package>

@@ -1,11 +1,14 @@
-# Bash
+#!/bin/bash
 
-../gradlew clean debug
-if [ $? -eq 0 ]
- then
-  adb uninstall org.ros.android.android_sensors_driver
-  adb install bin/MainActivity-debug.apk
-  adb shell am start -n org.ros.android.android_sensors_driver/org.ros.android.android_sensors_driver.MainActivity
-  adb logcat -c
-  adb logcat
+PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+KEY=${PROJECT_PATH}/keys/key.jks
+
+if [ ! -f ${KEY} ]; then 
+    echo "Please enter password for your new key,"
+    echo "and other detail you will ask."
+    echo "Remember your password, you will ask again,"
+    echo "when it install the APK"
+	./createKey.sh key
 fi
+
+./build.sh key
