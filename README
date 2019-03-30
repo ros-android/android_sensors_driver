@@ -1,4 +1,5 @@
 Authors:
+ no email             (Tal Regev)
  chadrockey@gmail.com (Chad Rockey)
  axelfurlan@gmail.com (Axel Furlan)
 
@@ -13,18 +14,19 @@ The topic names are:
  /camera/image/compressed
 
 
-
-
 Compiling:
 
 To compile it on you machine, please follow the detailed instructions at:
 
 Rosjava:
- http://www.dobots.nl/blog/-/blogs/android-and-rosjava
+http://wiki.ros.org/rosjava/Tutorials/indigo/Installation
+
+Also need to compile android_core from here:
+https://github.com/rosjava/android_core/tree/indigo
 
 Once your environment is set, do the following steps:
- 1) git clone the repo in the android_core folder (the same folder where tutorials are).
+ 1) git clone the repo in the android_core folder (the same folder where rosjava are ~/rosjava).
  2) Edit the settings.gradle file in the android_core folder, adding 'android_sensors_driver' at the end of the include list.
- 3) cd android_sensors_driver; ../gradlew clean debug
+ 3) cd ~/rosjava; catkin_make
 
 For the whole process of building, packing, installing into the phone and running the app in debug mode, use the buildAll.sh script.

@@ -166,6 +166,10 @@ public void onStart(ConnectedNode node)
 
 //@Override
 public void onShutdown(Node arg0) {
+	if(this.navSatThread == null){
+  	  	return;
+  	}
+	
 	this.navSatThread.shutdown();
 	try {
 		this.navSatThread.join();

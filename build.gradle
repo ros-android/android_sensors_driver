@@ -14,10 +14,29 @@
  * the License.
  */
 
+
+
 dependencies {
-  compile 'ros.rosjava_core:rosjava_tutorial_pubsub:0.0.0-SNAPSHOT'
+  compile "org.ros.rosjava_core:rosjava:0.2.0"
+  compile "org.ros.rosjava_core:rosjava_tutorial_pubsub:[0,)"
+  compile 'com.android.support:support-v4:21.0.0'
+  compile project(':android_15')
+
 }
 
 
-debug.dependsOn project(':android_gingerbread_mr1').tasks.debug
+apply plugin: 'android'
 
+/*debug.dependsOn project(':android_gingerbread_mr1').tasks.debug*/
+
+android {
+    compileSdkVersion 15
+
+    defaultConfig {
+        minSdkVersion 15
+        applicationId "org.ros.android.android_sensor_driver"
+        targetSdkVersion 15
+        versionCode 1
+        versionName "1.0"
+    }
+}

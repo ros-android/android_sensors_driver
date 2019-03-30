@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ROS Android Sensors Driver</string>
+
+    <string name="app_name">ROS Sensors Driver</string>
+    
+    <string name="help_title">About Android Sensors Driver</string>
+    <string name="help_message">Android Sensors Driver is an open source project!  For more information, go to the \'Wiki\'.  To report bugs or request features click \'Report\'.</string>
+    <string name="help_ok">OK</string>
+    <string name="help_report">Report</string>
+    <string name="help_wiki">Wiki</string>
+
 </resources>

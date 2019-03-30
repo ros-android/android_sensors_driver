@@ -31,7 +31,6 @@ package org.ros.android.android_sensors_driver;
 
 
 import java.util.List;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -58,6 +57,7 @@ public class ImuPublisher implements NodeMain
   private SensorListener sensorListener;
   private SensorManager sensorManager;
   private Publisher<Imu> publisher;
+  private int sensorDelay;
   
   private class ImuThread extends Thread
   {
@@ -83,9 +83,9 @@ public class ImuPublisher implements NodeMain
 	  {
 			Looper.prepare();
 			this.threadLooper = Looper.myLooper();
-			this.sensorManager.registerListener(this.sensorListener, this.accelSensor, SensorManager.SENSOR_DELAY_FASTEST);
-			this.sensorManager.registerListener(this.sensorListener, this.gyroSensor, SensorManager.SENSOR_DELAY_FASTEST);
-			this.sensorManager.registerListener(this.sensorListener, this.quatSensor, SensorManager.SENSOR_DELAY_FASTEST);
+			this.sensorManager.registerListener(this.sensorListener, this.accelSensor, sensorDelay);
+			this.sensorManager.registerListener(this.sensorListener, this.gyroSensor, sensorDelay);
+			this.sensorManager.registerListener(this.sensorListener, this.quatSensor, sensorDelay);
 			Looper.loop();
 	  }
 	    
@@ -141,7 +141,7 @@ public class ImuPublisher implements NodeMain
 			this.imu.getLinearAcceleration().setY(event.values[1]);
 			this.imu.getLinearAcceleration().setZ(event.values[2]);
 			
-			double[] tmpCov = {0.01,0,0, 0,0.01,0, 0,0,0.01};// TODO Make Parameter
+			double[] tmpCov = {0,0,0, 0,0,0, 0,0,0};// TODO Make Parameter
 			this.imu.setLinearAccelerationCovariance(tmpCov);
 			this.accelTime = event.timestamp;
 		}
@@ -150,7 +150,7 @@ public class ImuPublisher implements NodeMain
 			this.imu.getAngularVelocity().setX(event.values[0]);
 			this.imu.getAngularVelocity().setY(event.values[1]);
 			this.imu.getAngularVelocity().setZ(event.values[2]);
-			double[] tmpCov = {0.0025,0,0, 0,0.0025,0, 0,0,0.0025};// TODO Make Parameter
+			double[] tmpCov = {0,0,0, 0,0,0, 0,0,0};// TODO Make Parameter
 			this.imu.setAngularVelocityCovariance(tmpCov);
 	        this.gyroTime = event.timestamp;
 		}
@@ -162,13 +162,15 @@ public class ImuPublisher implements NodeMain
 	        this.imu.getOrientation().setX(quaternion[1]);
 	        this.imu.getOrientation().setY(quaternion[2]);
 	        this.imu.getOrientation().setZ(quaternion[3]);
-			double[] tmpCov = {0.001,0,0, 0,0.001,0, 0,0,0.001};// TODO Make Parameter
+			double[] tmpCov = {0,0,0, 0,0,0, 0,0,0};// TODO Make Parameter
 			this.imu.setOrientationCovariance(tmpCov);
 	       	this.quatTime = event.timestamp;
 		}
 		
 		// Currently storing event times in case I filter them in the future.  Otherwise they are used to determine if all sensors have reported.
-		if((this.accelTime != 0 || !this.hasAccel) && (this.gyroTime != 0 || !this.hasGyro) && (this.quatTime != 0 || !this.hasQuat))
+		if((this.accelTime != 0 || !this.hasAccel) &&
+		   (this.gyroTime != 0 || !this.hasGyro) && 
+		   (this.quatTime != 0 || !this.hasQuat))
 		{
 			// Convert event.timestamp (nanoseconds uptime) into system time, use that as the header stamp
 			long time_delta_millis = System.currentTimeMillis() - SystemClock.uptimeMillis();
@@ -189,9 +191,10 @@ public class ImuPublisher implements NodeMain
   }
 
   
-  public ImuPublisher(SensorManager manager)
+  public ImuPublisher(SensorManager manager, int sensorDelay)
   {
 	  this.sensorManager = manager;
+	  this.sensorDelay = sensorDelay;
   }
 
   public GraphName getDefaultNodeName()
@@ -252,6 +255,9 @@ public class ImuPublisher implements NodeMain
 //@Override
   public void onShutdown(Node arg0)
   {
+	  if(this.imuThread == null){
+	  	  	return;
+	  }
 	  this.imuThread.shutdown();
 	
 	  try
